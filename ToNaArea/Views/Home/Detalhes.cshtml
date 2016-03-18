@@ -1,0 +1,69 @@
+﻿@using ToNaArea.Models
+@model Arquivo
+@{
+    ViewBag.Title = "Detalhes";
+}
+
+<br />
+<div class="row">
+    <div class="col-xs-3">
+        <img src="@Model.ObterUrlDaFotoDoFacebook(96)" class="img-circle" />
+    </div>
+    <div class="col-xs-9 text-center ">
+        <h3>@Model.FacebookNome</h3>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-xs-12">
+        <a href="@Model.UrlImagem" target="_blank">
+            <img src="@Model.UrlImagem" class="img-responsive" style="max-height: 800px;" />
+        </a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12" id="googleMap" style="height: 200px;">
+        
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <p>@Model.Status</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <p>@Model.Timestamp</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        @Html.ActionLink("Voltar", "Index")
+    </div>
+</div>
+@section scripts{
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script>
+        function InicializarMapa() {
+            var posicao = new google.maps.LatLng(@Model.Localizacao.Latitude, @Model.Localizacao.Longitude);
+
+            var mapOptions = {
+                zoom: 15,
+                center: posicao,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            var map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);
+
+            var marker = new google.maps.Marker({
+                position: posicao,
+                map: map,
+                title: "@Model.FacebookNome"
+            });
+        }
+
+        InicializarMapa();
+    </script>
+}
+
+

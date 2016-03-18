@@ -1,0 +1,14 @@
+﻿<div class="row">
+    <div class="col-md-8">
+        <p>Para podermos exibir seu nome, sem precisar de cadastro, nos integramos ao Facebook.</p>
+        <p>Então para continuarmos, por favor, clique no botão para fazer o login.</p>
+    </div>
+    <div class="col-md-4 text-center">
+        @using (Html.BeginForm("ExternalLogin", "Account", FormMethod.Post, new { id = "loginForm" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.Hidden("provider", "Facebook")
+            <button type="submit" class="btn btn-primary btn-lg" name="provider" value="Facebook" title="Log in using your Facebook account">Login com o Facebook</button>
+        }
+    </div>
+</div>

@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - to na área</title>
+    <link rel="icon" href="@Url.Content("~/Images/location256.png")">
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand" style="background-color: white;">
+                    <img src="@Url.Content("~/Images/location32.png")" style="margin-top: -5px;" />
+                </a>
+                <a href="@Url.Action("Index", "Home")" class="navbar-brand">&nbsp;&nbsp;ToNaArea</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li>@Html.ActionLink("About", "About", "Home")</li>
+                </ul>
+                @Html.Partial("LoginHeader")
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>
+                &copy; @DateTime.Now.Year - ToNaArea
+                &nbsp;
+                <a href="http://fb.com/eduardospaki" target="_blank">
+                    <img src="@Url.Content("~/Images/fb.png")" />
+                </a>
+                &nbsp;
+                <a href="http://twitter.com/eduardospaki" target="_blank">
+                    <img src="@Url.Content("~/Images/twitter.png")" />
+                </a>
+                &nbsp;
+                <a href="https://br.linkedin.com/in/eduardospaki" target="_blank">
+                    <img src="@Url.Content("~/Images/linkedin.png")" />
+                </a>
+            </p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        var appInsights=window.appInsights||function(config){
+            function r(config){t[config]=function(){var i=arguments;t.queue.push(function(){t[config].apply(t,i)})}}var t={config:config},u=document,e=window,o="script",s=u.createElement(o),i,f;for(s.src=config.url||"//az416426.vo.msecnd.net/scripts/a/ai.0.js",u.getElementsByTagName(o)[0].parentNode.appendChild(s),t.cookie=u.cookie,t.queue=[],i=["Event","Exception","Metric","PageView","Trace"];i.length;)r("track"+i.pop());return r("setAuthenticatedUserContext"),r("clearAuthenticatedUserContext"),config.disableExceptionTracking||(i="onerror",r("_"+i),f=e[i],e[i]=function(config,r,u,e,o){var s=f&&f(config,r,u,e,o);return s!==!0&&t["_"+i](config,r,u,e,o),s}),t
+        }({
+            instrumentationKey:"c57f0ef5-e875-4b92-829f-71734a69802b"
+        });
+
+        window.appInsights=appInsights;
+        appInsights.trackPageView();
+    </script>
+</body>
+</html>

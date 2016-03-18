@@ -1,0 +1,175 @@
+﻿@{
+    ViewBag.Title = "ToNaArea";
+}
+<div class="row">
+    <div id="googleMap" class="col-md-12" style="height: 400px;">
+    </div>
+</div>
+
+@if (TempData["Sucesso"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @TempData["Sucesso"]
+    </div>
+}
+
+<div class="alert alert-danger" role="alert">
+</div>
+
+<br />
+@if (!Request.IsAuthenticated)
+{
+    @Html.Partial("LoginPartial")
+}
+
+<br />
+<div class="row" id="divUpload">
+    <div class="col-md-12">
+        <form class="form-horizontal" method="post" enctype="multipart/form-data" action="@Url.Action("Upload")" id="formUpload">
+            <fieldset>
+
+                <!-- Form Name -->
+                <legend>Está na área?</legend>
+
+                <input type="hidden" name="latitude" id="latitude" />
+                <input type="hidden" name="longitude" id="longitude" />
+                <input type="hidden" name="ultimoId" id="ultimoId" />
+
+                <!-- Textarea -->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="status">O que está fazendo?</label>
+                    <div class="col-md-8">
+                        <textarea class="form-control" id="status" name="status" maxlength="250"></textarea>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="foto">Foto</label>
+                    <div class="col-md-8">
+                        <input id="foto" name="foto" type="file" accept="image/*" class="form-control input-md">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4 control-label" for="foto"></label>
+                    <div class="col-md-8">
+                        <input type="submit" capture="camera" class="form-control input-md" value="Postar">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+@section scripts{
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script>
+        var map;
+
+        $(function () {
+            @if (!Request.IsAuthenticated)
+            {
+                @Html.Raw("$('#divUpload').hide();")
+            }
+
+            var tamanhoMaximo = 1024 * 1024 * 5; // 5mb
+
+            var aviso = $(".alert-danger");
+            aviso.hide();
+
+            var form = $("formUpload");
+            var foto = $("input[type=file]");
+
+            form.submit(function () {
+                if (!foto.val() || foto[0].files[0].size > tamanhoMaximo) {
+                    aviso.html("Por favor, informe uma foto com no máximo 5mb!");
+                    aviso.show();
+                    return false;
+                }
+
+                if (!$("#longitude").val())
+                {
+                    aviso.html("Não conseguimos capturar sua localização. Verifique as permissões de localização do seu navegador.");
+                    aviso.show();
+                    return false;
+                }
+
+                return true;
+            });
+
+            CapturarLocalizacao();
+        });
+
+        function CapturarLocalizacao()
+        {
+            var longitude = $("#longitude");
+            var latitude = $("#latitude");
+
+            navigator.geolocation.getCurrentPosition(function (position) {
+                latitude.val(position.coords.latitude);
+                longitude.val(position.coords.longitude);
+
+                InicializarMapa(position.coords.latitude, position.coords.longitude);
+                ObterUltimosUploads();
+                setInterval(ObterUltimosUploads, 10000);
+            });
+        }
+
+        function InicializarMapa(latitude, longitude) {
+            var mapOptions = {
+                zoom: 15,
+                center: new google.maps.LatLng(latitude, longitude),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            this.map = new google.maps.Map(document.getElementById('googleMap'), mapOptions);
+        }
+
+        function ObterUltimosUploads()
+        {
+            var longitude = $("#longitude");
+            var latitude = $("#latitude");
+            var ultimoId = $("#ultimoId");
+
+            $.getJSON(
+                "@Url.Action("ObterUltimosUploads")",
+                {
+                    ultimoId: ultimoId.val(),
+                    latitude: latitude.val(),
+                    longitude: longitude.val()
+                },
+                function (result) {
+                    if (result.TemResultado == true) {
+
+                        ultimoId.val(result.UltimoId);
+
+                        $.each(result.Items, function (i, item) {
+                            AdicionarPosicaoAoMapa(item.Latitude, item.Longitude, item.FacebookNome, item.UrlFotoDoFacebook, item.UrlImagem, item.Status, item.Id);
+                        });
+                    }
+                }
+            );
+        }
+
+        function AdicionarPosicaoAoMapa(latitude, longitude, nome, perfilUrl, fotoUrl, status, id)
+        {
+            if (!this.map)
+                return;
+
+            var infowindow = new google.maps.InfoWindow({
+                content: '<img src="[perfilUrl]" class="img-circle"/>&nbsp;<b>[nome]</b><br /><br /><a href="@Url.Action("Detalhes")/[id]"><center><img src="[fotoUrl]" class="img-responsive" style="max-height: 64px;" title="[status]"/></center></a>'.replace("[perfilUrl]", perfilUrl).replace("[nome]", nome).replace("[fotoUrl]", fotoUrl).replace("[id]", id).replace("[status]", status)
+            });
+
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(latitude, longitude),
+                map: this.map,
+                title: nome
+            });
+
+            marker.addListener('click', function () {
+                infowindow.open(this.map, marker);
+            });
+        }
+    </script>
+}

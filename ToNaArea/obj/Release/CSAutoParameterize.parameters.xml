@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="DefaultConnection-Web.config Connection String" description="DefaultConnection Connection String used in web.config by the application to access the database." defaultValue="Server=tcp:spakidb.database.windows.net,1433;Database=ToNaAreaDb;User ID=spaki@spakidb;Password=SenhaFraca1!;Encrypt=True;TrustServerCertificate=False;Connection Timeout=60;" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\Eduardo\\documents\\visual\ studio\ 2015\\Projects\\ToNaArea\\ToNaArea\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='DefaultConnection']/@connectionString" />
+  </parameter>
+</parameters>

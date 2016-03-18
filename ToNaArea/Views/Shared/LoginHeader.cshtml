@@ -1,0 +1,35 @@
+﻿@using System.Security.Claims
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    {
+        var usuario = (ClaimsIdentity)User.Identity;
+        var nome = usuario.Claims.FirstOrDefault(c => c.Type == "FacebookNome").Value;
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <img src="@Url.Action("FotoUsuarioLogado")" class="img-circle" style="margin-top: 14px;"/>
+            </li>
+            <li>
+                <a href="javascript:;">Olá @nome</a> 
+            </li>
+            <li>
+                <a href="javascript:document.getElementById('logoutForm').submit()">Logout</a>
+            </li>
+        </ul>
+    }
+}
+else
+{
+    using (Html.BeginForm("ExternalLogin", "Account", FormMethod.Post, new { id = "loginForm", @class = "navbar-right" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("provider", "Facebook")
+        <ul class="nav navbar-nav navbar-right">
+            <li>
+                <a href="javascript:javascript:document.getElementById('loginForm').submit()">Login</a>
+            </li>
+        </ul>
+    }
+}
