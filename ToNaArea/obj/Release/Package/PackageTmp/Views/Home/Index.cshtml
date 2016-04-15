@@ -78,17 +78,16 @@
             var aviso = $(".alert-danger");
             aviso.hide();
 
-            var form = $("formUpload");
             var foto = $("input[type=file]");
 
-            form.submit(function () {
+            $("#formUpload").submit(function () {
                 if (!foto.val() || foto[0].files[0].size > tamanhoMaximo) {
                     aviso.html("Por favor, informe uma foto com no máximo 5mb!");
                     aviso.show();
                     return false;
                 }
 
-                if (!$("#longitude").val())
+                if (!$("#latitude").val() || !$("#longitude").val() || !$.isNumeric($("#latitude").val()) || !$.isNumeric($("#longitude").val()))
                 {
                     aviso.html("Não conseguimos capturar sua localização. Verifique as permissões de localização do seu navegador.");
                     aviso.show();

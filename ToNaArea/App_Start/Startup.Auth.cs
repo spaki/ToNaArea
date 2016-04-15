@@ -64,7 +64,7 @@ namespace ToNaArea
             var opcoesDeLogin = new FacebookAuthenticationOptions()
             {
                 AppId = ConfigurationManager.AppSettings["FacebookAppId"],
-                AppSecret = ConfigurationManager.AppSettings["AppSecretAppId"]
+                AppSecret = ConfigurationManager.AppSettings["FacebookAppSecret"]
             };
             opcoesDeLogin.Scope.Add("email");
             opcoesDeLogin.Provider = new FacebookAuthenticationProvider
